@@ -1,0 +1,15 @@
+{
+  "runtime": "V8",
+  "timeZone": "America/New_York",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.external_request"
+  ],
+  "webApp": {
+    "access": "ANYONE_ANONYMOUS",
+    "executeAs": "USER_DEPLOYING"
+  },
+  "compatibility": {
+    "strictMode": true,
+    "warningsAsErrors": false
+  }
+}

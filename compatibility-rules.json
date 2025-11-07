@@ -1,0 +1,210 @@
+{
+  "globals": {
+    "crypto": {
+      "available": false,
+      "replacement": "Utilities",
+      "message": "Use Utilities.computeDigest() or Utilities.computeHmacSignature()",
+      "docs": "https://developers.google.com/apps-script/reference/utilities",
+      "severity": "error"
+    },
+    "fetch": {
+      "available": false,
+      "replacement": "UrlFetchApp.fetch()",
+      "message": "Use UrlFetchApp.fetch() instead of fetch()",
+      "autofix": true,
+      "severity": "error",
+      "docs": "https://developers.google.com/apps-script/reference/url-fetch"
+    },
+    "localStorage": {
+      "available": false,
+      "replacement": "PropertiesService.getUserProperties()",
+      "message": "Use PropertiesService instead of localStorage",
+      "severity": "error",
+      "docs": "https://developers.google.com/apps-script/reference/properties"
+    },
+    "sessionStorage": {
+      "available": false,
+      "replacement": "PropertiesService.getUserProperties()",
+      "message": "Use PropertiesService instead of sessionStorage",
+      "severity": "error",
+      "docs": "https://developers.google.com/apps-script/reference/properties"
+    },
+    "window": {
+      "available": false,
+      "message": "window object is not available in Apps Script server-side environment",
+      "severity": "error"
+    },
+    "document": {
+      "available": false,
+      "message": "document object is not available in Apps Script server-side environment. Use DocumentApp for Google Docs.",
+      "severity": "error"
+    },
+    "XMLHttpRequest": {
+      "available": false,
+      "replacement": "UrlFetchApp.fetch()",
+      "message": "Use UrlFetchApp.fetch() instead of XMLHttpRequest",
+      "severity": "error"
+    },
+    "setTimeout": {
+      "available": false,
+      "replacement": "Utilities.sleep()",
+      "message": "Use Utilities.sleep(milliseconds) for delays. Note: Apps Script has execution time limits.",
+      "severity": "warning",
+      "docs": "https://developers.google.com/apps-script/reference/utilities/utilities#sleepmilliseconds"
+    },
+    "setInterval": {
+      "available": false,
+      "message": "setInterval is not available. Use time-driven triggers instead.",
+      "severity": "error",
+      "docs": "https://developers.google.com/apps-script/guides/triggers/installable#time-driven_triggers"
+    },
+    "clearTimeout": {
+      "available": false,
+      "severity": "error"
+    },
+    "clearInterval": {
+      "available": false,
+      "severity": "error"
+    }
+  },
+  "apis": {
+    "crypto.subtle.digest": {
+      "available": false,
+      "replacement": "Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, data)",
+      "severity": "error",
+      "autofix": true
+    },
+    "crypto.getRandomValues": {
+      "available": false,
+      "replacement": "Utilities.getUuid() or Math.random()",
+      "message": "Use Utilities.getUuid() for unique IDs or Math.random() for random numbers",
+      "severity": "error"
+    },
+    "crypto.randomUUID": {
+      "available": false,
+      "replacement": "Utilities.getUuid()",
+      "severity": "error",
+      "autofix": true
+    },
+    "Buffer": {
+      "available": false,
+      "replacement": "Utilities.base64Encode() / Utilities.base64Decode()",
+      "message": "Use Utilities methods for encoding/decoding",
+      "severity": "error"
+    },
+    "process.env": {
+      "available": false,
+      "replacement": "PropertiesService.getScriptProperties()",
+      "message": "Use PropertiesService for environment variables",
+      "severity": "error"
+    },
+    "fs": {
+      "available": false,
+      "replacement": "DriveApp",
+      "message": "Use DriveApp for file operations",
+      "severity": "error"
+    },
+    "path": {
+      "available": false,
+      "message": "Node.js path module is not available",
+      "severity": "error"
+    }
+  },
+  "features": {
+    "async-await": {
+      "available": true,
+      "notes": "Supported in V8 runtime only",
+      "requiresRuntime": "V8",
+      "severity": "info"
+    },
+    "promises": {
+      "available": true,
+      "notes": "Supported in V8 runtime only",
+      "requiresRuntime": "V8",
+      "severity": "info"
+    },
+    "es-modules": {
+      "available": false,
+      "message": "Apps Script uses global scope. All functions are globally accessible. import/export statements are not supported.",
+      "severity": "error"
+    },
+    "import": {
+      "available": false,
+      "message": "ES6 import is not supported. Apps Script uses global scope.",
+      "severity": "error"
+    },
+    "export": {
+      "available": false,
+      "message": "ES6 export is not supported. All top-level functions are automatically available globally.",
+      "severity": "error"
+    },
+    "require": {
+      "available": false,
+      "message": "CommonJS require is not supported. Use Libraries feature for code reuse.",
+      "severity": "error",
+      "docs": "https://developers.google.com/apps-script/guides/libraries"
+    },
+    "class": {
+      "available": true,
+      "notes": "ES6 classes are supported in V8 runtime",
+      "requiresRuntime": "V8",
+      "severity": "info"
+    },
+    "arrow-functions": {
+      "available": true,
+      "notes": "Arrow functions are supported in V8 runtime",
+      "requiresRuntime": "V8",
+      "severity": "info"
+    },
+    "destructuring": {
+      "available": true,
+      "notes": "Destructuring is supported in V8 runtime",
+      "requiresRuntime": "V8",
+      "severity": "info"
+    },
+    "spread-operator": {
+      "available": true,
+      "notes": "Spread operator is supported in V8 runtime",
+      "requiresRuntime": "V8",
+      "severity": "info"
+    },
+    "template-literals": {
+      "available": true,
+      "notes": "Template literals are supported in V8 runtime",
+      "requiresRuntime": "V8",
+      "severity": "info"
+    }
+  },
+  "patterns": {
+    "fetch-pattern": {
+      "pattern": "fetch\\s*\\(",
+      "message": "Use UrlFetchApp.fetch() instead of fetch()",
+      "severity": "error",
+      "autofix": {
+        "find": "fetch(",
+        "replace": "UrlFetchApp.fetch("
+      }
+    },
+    "console-log": {
+      "pattern": "console\\.log\\s*\\(",
+      "message": "console.log works but Logger.log() is recommended for Apps Script",
+      "severity": "info",
+      "docs": "https://developers.google.com/apps-script/reference/base/logger"
+    },
+    "import-statement": {
+      "pattern": "^\\s*import\\s+",
+      "message": "import statements are not supported. Apps Script uses global scope.",
+      "severity": "error"
+    },
+    "export-statement": {
+      "pattern": "^\\s*export\\s+",
+      "message": "export statements are not supported. Functions are automatically global.",
+      "severity": "error"
+    },
+    "require-statement": {
+      "pattern": "require\\s*\\(",
+      "message": "require() is not supported. Use Libraries for external code.",
+      "severity": "error"
+    }
+  }
+}
