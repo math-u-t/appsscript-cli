@@ -177,7 +177,7 @@
   },
   "patterns": {
     "fetch-pattern": {
-      "pattern": "fetch\\s*\\(",
+      "pattern": "(?<!\\.)fetch\\s*\\(",
       "message": "Use UrlFetchApp.fetch() instead of fetch()",
       "severity": "error",
       "autofix": {
