@@ -88,7 +88,7 @@ export class CompatibilityChecker {
             line: lineNum + 1,
             column: match.index + 1,
             severity: rule.severity,
-            code: name.toUpperCase(),
+            code: name.toUpperCase().replace(/-/g, '_'),
             message: rule.message,
             fix: rule.autofix ? `Replace with: ${rule.autofix.replace}` : undefined,
             docs: rule.docs
@@ -103,15 +103,21 @@ export class CompatibilityChecker {
   private checkAST(filePath: string, content: string, ast: any): CompatibilityIssue[] {
     const issues: CompatibilityIssue[] = [];
 
-    const visit = (node: any) => {
+    const visit = (node: any, parent?: any) => {
       if (!node) return;
 
       // Check for global API usage
       if (node.type === parser.AST_NODE_TYPES.Identifier) {
         const name = node.name;
 
-        // Check globals
-        if (this.rules.globals[name]) {
+        // Skip if this identifier is a property in a MemberExpression
+        // (e.g., skip 'fetch' in 'UrlFetchApp.fetch')
+        const isProperty = parent &&
+                          parent.type === parser.AST_NODE_TYPES.MemberExpression &&
+                          parent.property === node;
+
+        // Check globals only if not a property of a member expression
+        if (!isProperty && this.rules.globals[name]) {
           const rule = this.rules.globals[name];
           if (!rule.available) {
             issues.push({
@@ -202,9 +208,9 @@ export class CompatibilityChecker {
         const child = node[key];
 
         if (Array.isArray(child)) {
-          child.forEach(visit);
+          child.forEach(c => visit(c, node));
         } else if (child && typeof child === 'object' && child.type) {
-          visit(child);
+          visit(child, node);
         }
       }
     };

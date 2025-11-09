@@ -1,6 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { glob } from 'glob';
+import * as ts from 'typescript';
 import { BuildResult, GScriptConfig } from '../types';
 import { CompatibilityChecker } from '../checker';
 
@@ -80,9 +81,14 @@ export class Builder {
   }
 
   private processFile(content: string, filename: string): string {
-    // Remove import/export statements
+    // Transpile TypeScript to JavaScript if needed
     let processed = content;
 
+    if (filename.endsWith('.ts')) {
+      processed = this.transpileTypeScript(content, filename);
+    }
+
+    // Remove import/export statements
     // Remove import statements
     processed = processed.replace(/^import\s+.*?;?\s*$/gm, '');
     processed = processed.replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, '');
@@ -99,6 +105,33 @@ export class Builder {
     processed = processed.replace(/\n{3,}/g, '\n\n');
 
     return processed.trim();
+  }
+
+  private transpileTypeScript(content: string, filename: string): string {
+    // TypeScript compiler options for Apps Script
+    const compilerOptions: ts.CompilerOptions = {
+      target: ts.ScriptTarget.ES2020,
+      module: ts.ModuleKind.None,
+      removeComments: false,
+      strict: false,
+      esModuleInterop: true,
+      skipLibCheck: true,
+      lib: ['lib.es2020.d.ts'],
+      noEmit: false,
+      declaration: false,
+      sourceMap: false,
+      inlineSourceMap: false,
+      inlineSources: false
+    };
+
+    // Transpile the TypeScript code
+    const result = ts.transpileModule(content, {
+      compilerOptions,
+      fileName: filename,
+      reportDiagnostics: false
+    });
+
+    return result.outputText;
   }
 
   private async sortByDependencies(srcDir: string, files: string[]): Promise<string[]> {
